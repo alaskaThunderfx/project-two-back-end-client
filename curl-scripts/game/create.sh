@@ -10,8 +10,7 @@ curl "${API}${URL_PATH}" \
   --header "Authorization: Bearer ${TOKEN}" \
   --data '{
     "game": {
-      "text": "'"${TEXT}"'",
-      "title": "'"${TITLE}"'"
+      "areas": "'"${AREAS}"'"
     }
   }'
 

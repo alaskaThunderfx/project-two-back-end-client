@@ -1,12 +1,8 @@
 const mongoose = require('mongoose')
 
 const gameSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  text: {
-    type: String,
+  areas: {
+    type: Array,
     required: true
   },
   owner: {
