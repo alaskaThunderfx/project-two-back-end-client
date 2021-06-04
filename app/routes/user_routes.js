@@ -32,6 +32,14 @@ router.post('/sign-up', (req, res, next) => {
   Promise.resolve(req.body.credentials)
     // reject any requests where `credentials.password` is not present, or where
     // the password is an empty string
+    // The credentials will be as follows:
+    // { credentials:
+    //   {
+    //    user_name: 'userName',
+    //    password: 'pw',
+    //    password_confirmation: 'pw'
+    //   }
+    // }
     .then(credentials => {
       if (!credentials ||
           !credentials.password ||
@@ -44,11 +52,11 @@ router.post('/sign-up', (req, res, next) => {
     .then(hash => {
       // return necessary params to create a user
       return {
-        email: req.body.credentials.email,
+        user_name: req.body.credentials.user_name,
         hashedPassword: hash
       }
     })
-    // create user with provided email and hashed password
+    // create user with provided user_name and hashed password
     .then(user => User.create(user))
     // send the new user object back with status 201, but `hashedPassword`
     // won't be send because of the `transform` in the User model
@@ -63,10 +71,10 @@ router.post('/sign-in', (req, res, next) => {
   const pw = req.body.credentials.password
   let user
 
-  // find a user based on the email that was passed
-  User.findOne({ email: req.body.credentials.email })
+  // find a user based on the user_name that was passed
+  User.findOne({ user_name: req.body.credentials.user_name })
     .then(record => {
-      // if we didn't find a user with that email, send 401
+      // if we didn't find a user with that user_name, send 401
       if (!record) {
         throw new BadCredentialsError()
       }
@@ -91,7 +99,7 @@ router.post('/sign-in', (req, res, next) => {
       }
     })
     .then(user => {
-      // return status 201, the email, and the new token
+      // return status 201, the user_name, and the new token
       res.status(201).json({ user: user.toObject() })
     })
     .catch(next)
@@ -136,6 +144,11 @@ router.delete('/sign-out', requireToken, (req, res, next) => {
   req.user.save()
     .then(() => res.sendStatus(204))
     .catch(next)
+})
+
+router.get('/users', (req, res) => {
+  res.send('this is working')
+  res.status(200).json(res)
 })
 
 module.exports = router
