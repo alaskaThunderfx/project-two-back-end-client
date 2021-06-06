@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 
 const gameSchema = new mongoose.Schema({
-  areas: {
-    type: Array,
+  currentArea: {
+    type: String,
     required: true
   },
   inventory: {
